@@ -1,0 +1,17 @@
+[hooks]
+pre = ["pre.rhai"]
+
+[placeholders.cli_enable]
+type = "bool"
+prompt = "Enable CLI support?"
+default = true
+
+[placeholders.logging_enable]
+type = "bool"
+prompt = "Enable logging support?"
+default = true
+
+[placeholders.config_enable]
+type = "bool"
+prompt = "Enable config file support?"
+default = true
