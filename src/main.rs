@@ -5,14 +5,14 @@ mod error;
 {% if config_enable %}
 use crate::config::Config;
 {%- endif %}
-{%- if cli_enable %}
+{% if cli_enable %}
 use std::path::PathBuf;
-{%- endif %}
+{% endif %}
 use anyhow::{anyhow, Result};
 {%- if cli_enable %}
 use clap::{Parser, Subcommand};
 {%- endif %}
-{%- if logging_enable %}
+{% if logging_enable %}
 use tracing::subscriber::set_global_default;
 use tracing_log::LogTracer;
 use tracing_subscriber::{layer::SubscriberExt, EnvFilter, Registry};
@@ -30,15 +30,18 @@ struct Cli {
     debug: bool,
 
     #[command(subcommand)]
-    command: Option<Commands>,
+    command: Commands,
 }
 
 #[derive(Subcommand)]
 enum Commands {
-    Test {
-        #[arg(short, long)]
-        list: bool,
-    },
+    Test(TestArgs),
+}
+
+#[derive(Args)]
+struct TestArgs {
+    #[arg(short, long)]
+    data: String
 }
 {% endif %}
 #[tokio::main]
@@ -93,7 +96,7 @@ async fn main() -> Result<()> {
     }
 
     let config = config.unwrap();
-    {%- endif %}
+    {% endif %}
     // Main app
 
     Ok(())
