@@ -10,7 +10,7 @@ use std::path::PathBuf;
 {% endif %}
 use anyhow::{anyhow, Result};
 {%- if cli_enable %}
-use clap::{Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 {%- endif %}
 {% if logging_enable %}
 use tracing::subscriber::set_global_default;
@@ -35,18 +35,19 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Test(TestArgs),
+    Print(PrintArgs),
 }
 
 #[derive(Args)]
-struct TestArgs {
+struct PrintArgs {
     #[arg(short, long)]
-    data: String
+    data: String,
 }
 {% endif %}
 #[tokio::main]
 async fn main() -> Result<()> {
     {%- if cli_enable %}
+    // Parse CLI input
     let cli = Cli::parse();
     {%- endif %}
     {% if logging_enable and cli_enable %}
@@ -71,8 +72,8 @@ async fn main() -> Result<()> {
     // Write to stdout by default
     let formatting_layer = tracing_subscriber::fmt::layer().with_writer(std::io::stdout);
 
+    // Setup global subscriber
     let subscriber = Registry::default().with(env_filter).with(formatting_layer);
-
     set_global_default(subscriber).expect("Failed to set subscriber");
     {%- endif %}
     {% if config_enable %}
@@ -95,8 +96,17 @@ async fn main() -> Result<()> {
         return Err(anyhow!("Error: {:?}", err));
     }
 
-    let config = config.unwrap();
-    {% endif %}
+    let _config = config.unwrap();
+    {%- endif %}
+    {% if cli_enable %}
+    // Match on command given from user
+    match cli.command {
+        Commands::Print(args) => {
+            println!("{}", args.data);
+        }
+    }
+    {%- endif %}
+
     // Main app
 
     Ok(())
