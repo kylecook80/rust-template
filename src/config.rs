@@ -39,7 +39,7 @@ impl Config {
         }
 
         if !config_path.exists() {
-            return Err(error::Error::ConfigOpen(config_path));
+            return Err(error::Error::NoConfig);
         }
 
         let mut config_file = File::open(config_path)?;

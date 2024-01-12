@@ -1,5 +1,3 @@
-use std::path::PathBuf;
-
 use thiserror::Error;
 
 pub type Result<T> = std::result::Result<T, Error>;
@@ -8,11 +6,10 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
-{%- if config_enable %}
-    #[error("could not find config file {0}")]
-    ConfigOpen(PathBuf),
+
+    #[error("no config file ({{project-name}}) found")]
+    NoConfig,
 
     #[error("could not parse config file: {0}")]
     ConfigParse(#[from] toml::de::Error),
-{%- endif %}
 }
