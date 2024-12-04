@@ -19,9 +19,11 @@ impl Config {
     pub fn new(file: Option<PathBuf>) -> Result<Config, error::Error> {
         tracing::debug!("Config being parsed");
 
-        let mut v = Vec::new();
-        v.push(Path::new("./").join(CONFIG_NAME));
-        v.push(Path::new("/etc").join(CONFIG_NAME));
+        let v = vec![
+            Path::new("./").join(CONFIG_NAME),
+            Path::new("/etc").join(CONFIG_NAME),
+        ];
+
         let _ = FILES.set(v);
 
         let mut config_path;

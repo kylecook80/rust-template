@@ -43,12 +43,11 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
 
     // Set logging level
-    let filter: String;
-    if cli.debug {
-        filter = String::from("debug");
+    let filter = if cli.debug {
+        String::from("debug")
     } else {
-        filter = String::from("info");
-    }
+        String::from("info")
+    };
 
     // Initialize all logging for the head node
     LogTracer::init().expect("Failed to set logger");
