@@ -29,13 +29,13 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    Test(TestArgs),
+    Print(PrintArgs),
 }
 
 #[derive(Args)]
-struct TestArgs {
+struct PrintArgs {
     #[arg(short, long)]
-    data: String
+    data: String,
 }
 
 #[tokio::main]
@@ -58,6 +58,8 @@ async fn main() -> Result<()> {
 
     // Write to stdout by default
     let formatting_layer = tracing_subscriber::fmt::layer().with_writer(std::io::stdout);
+
+    // Setup global subscriber
     let subscriber = Registry::default().with(env_filter).with(formatting_layer);
     set_global_default(subscriber).expect("Failed to set subscriber");
 
